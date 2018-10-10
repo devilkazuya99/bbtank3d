@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Babylon Template</title>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+
+        <script src="https://cdn.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+        <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+    </head>
+
+   <body>
+
+    <canvas id="renderCanvas" touch-action="none"></canvas> //touch-action="none" for best results from PEP
+
+    <script src="../axis.js"></script>
+    <script src="tank.js"></script>
+    <script>
+        var canvas = document.getElementById("renderCanvas"); // Get the canvas element 
+        var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+
+        /******* Add the create scene function ******/
+        var createScene = function () {
+
+            // Create the scene space
+            var scene = new BABYLON.Scene(engine);
+
+            // Add a camera to the scene and attach it to the canvas
+            var camera = new BABYLON.ArcRotateCamera("Camera", (3 * Math.PI / 2) + 0.4 , (Math.PI / 2) - 0.30, 20, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+
+            // Add lights to the scene
+            var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+            var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+
+            Axises.create(scene);
+
+            // create arena
+            var tank1 = new Tank();
+            tank1.create(scene);
+            tank1.body.position.x = 0;
+            tank1.body.position.z = 0;
+
+            var tank2 = new Tank();
+            tank2.create(scene);
+            tank2.body.position.x = -5;
+            tank2.body.position.z = 5;
+
+            var tank3 = new Tank();
+            tank3.create(scene);
+            tank3.body.position.x = -10;
+            tank3.body.position.z = 10;
+
+            return scene;
+        };
+        /******* End of the create scene function ******/    
+
+        var scene = createScene(); //Call the createScene function
+
+        // Register a render loop to repeatedly render the scene
+        engine.runRenderLoop(function () { 
+                scene.render();
+        });
+
+        // Watch for browser/canvas resize events
+        window.addEventListener("resize", function () { 
+                engine.resize();
+        });
+    </script>
+
+   </body>
+
+</html>
