@@ -48,11 +48,12 @@ Give an example
 ```
 
 ## TODOs
-- [ ] tank navigation with keyboard
-- [ ] tank cannon turning with keyboard
-- [ ] attach camera to tank
+- [x] tank navigation with keyboard
+- [x] tank cannon turning with keyboard
+- [x] attach camera to tank
 - [ ] bullet and collision
-
+- [ ] Tank HP sprite
+- [ ] Multiplayer mode
 
 ## Deployment
 
