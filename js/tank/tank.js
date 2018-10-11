@@ -1,5 +1,9 @@
+/* TODO
+    - Add sprite on top of the tank to display HP
+*/
 function Tank() {
     return {
+        hp: 100,
         cap: null,
         body: null,
         create: function (scene) {
@@ -17,6 +21,7 @@ function Tank() {
                 depth: base_box_depth
             }, scene);
             baseBox.position.y = base_box_height / 2;
+            baseBox.checkCollisions = true;
             this.body = baseBox;
 
             var topBox = BABYLON.MeshBuilder.CreateBox("topBox", {
@@ -27,12 +32,13 @@ function Tank() {
             topBox.parent = baseBox;
             topBox.position.y = base_box_height;
             topBox.position.z = 0.20;
+            topBox.checkCollisions = true;
             this.cap = topBox;
 
             var cannon = BABYLON.MeshBuilder.CreateTube("cannon", {
                 path: [
                     new BABYLON.Vector3(0, 0, 0),
-                    new BABYLON.Vector3(0, 0, -2.5)
+                    new BABYLON.Vector3(0, 0, -2.0)
                 ],
                 radius: 0.15,
                 sideOrientation: BABYLON.Mesh.DOUBLESIDE,

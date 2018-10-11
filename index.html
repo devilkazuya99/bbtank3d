@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Babylon Template</title>
+    <title>TANK 3D</title>
 
     <style>
         html,
@@ -35,6 +35,18 @@
     <script src="js/arena/arena.js"></script>
     <script src="js/tank/tank.js"></script>
     <script>
+        ////
+        // Converts from degrees to radians.
+        Math.radians = function(degrees) {
+            return degrees * Math.PI / 180;
+        };
+
+        // Converts from radians to degrees.
+        Math.degrees = function(radians) {
+            return radians * 180 / Math.PI;
+        };
+        ////
+
         var canvas = document.getElementById("renderCanvas"); // Get the canvas element 
         var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
         /******* Add the create scene function ******/
