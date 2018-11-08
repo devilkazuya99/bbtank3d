@@ -2,6 +2,8 @@
 
 3D multiplayer battle tank using babylon.js
 
+![screenshot](screen_shot.png "BBTank3D")
+
 ## Getting Started
 
 Just run the index.html file. 
