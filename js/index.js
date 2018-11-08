@@ -31,6 +31,7 @@ var createScene = function () {
     tank1.body.position.x = 0;
     tank1.body.position.z = 0;
     camera.parent = tank1.cap;
+    tank1.cap.checkCollisions = false;
 
     var tank2 = new Tank();
     tank2.create(scene);
@@ -84,6 +85,9 @@ var createScene = function () {
         };
     }
 
+    var forwards = new BABYLON.Vector3(0,0,-0.5);
+    forwards.negate();
+
     const turnSpeed = 0.005;
     const moveSpeed = 0.05;
     // Game/Render loop
@@ -91,7 +95,7 @@ var createScene = function () {
         if (inputMap["w"] || inputMap["ArrowUp"]) {
             let pt = calculateXY();
             if (tank1.body.intersectsMesh(tank2.body, true) ||
-                tank1.body.intersectsMesh(tank3.body, true)) {
+                tank1.body.intersectsMesh(tank3.body, true)) {s
                 // console.log("Outch~~!!!");
                 tank1.body.position.z += (pt.a * moveSpeed * 7);
                 tank1.body.position.x += (pt.b * moveSpeed * 7);
@@ -130,6 +134,11 @@ var createScene = function () {
             // console.log(tank1.body.rotation);
             tank1.cap.rotation.y += turnSpeed;
         }
+        if (inputMap[" "]) {
+            // tank1.bullet.position.z -= 0.04;
+            tank1.bullet.moveWithCollisions(forwards);
+        }
+
     });
 
     scene.activeCamera.panningSensibility = 0;

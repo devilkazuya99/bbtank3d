@@ -6,6 +6,7 @@ function Tank() {
         hp: 100,
         cap: null,
         body: null,
+        bullet: null,
         create: function (scene) {
             // Add and manipulate meshes in the scene
             var base_box_height = 0.65;
@@ -33,6 +34,7 @@ function Tank() {
             topBox.position.y = base_box_height;
             topBox.position.z = 0.20;
             topBox.checkCollisions = true;
+            topBox.isPickable = true;
             this.cap = topBox;
 
             var cannon = BABYLON.MeshBuilder.CreateTube("cannon", {
@@ -58,6 +60,17 @@ function Tank() {
             myMaterial.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53);
 
             cannon.material = myMaterial;
+
+            var bullet = BABYLON.MeshBuilder.CreateSphere("bullet", {diameter: 0.28}, scene);
+            bullet.parent = topBox;
+            bullet.position.z = -2.5;
+            bullet.onCollide = function(target, b) {
+                console.log(target.name);
+                bullet.position.x = 0;
+                bullet.position.y = 0;
+                bullet.position.z = -2.5;
+            };
+            this.bullet = bullet;
 
             var wheelZ = [-1.15, -0.5, 0.5, 1.15];
             for (var i = 0; i < 4; i++) {

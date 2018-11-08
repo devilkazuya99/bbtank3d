@@ -68,6 +68,38 @@
             tank3.body.position.x = -10;
             tank3.body.position.z = 10;
 
+            var target = BABYLON.MeshBuilder.CreateBox("targer", {
+                height: 5,
+                width: 4,
+                depth: 1
+            }, scene);
+            target.position.z = -10;
+            target.position.y = 2;
+            target.checkCollisions = true;
+            target.onCollide = function(obj, mask) {
+                console.log("I'm hit by " + obj.name);
+            };
+
+            var inputMap = {};
+            scene.actionManager = new BABYLON.ActionManager(scene);
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
+                inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
+                inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+
+            var forwards = new BABYLON.Vector3(0,0,-0.2);
+            forwards.negate();
+
+            scene.onBeforeRenderObservable.add(() => {
+                if (inputMap[" "]) {
+                    //console.log(tank1.body);
+                    // tank1.bullet.position.z -= 0.02;
+                    tank1.bullet.moveWithCollisions(forwards);
+                }
+            });
+
             return scene;
         };
         /******* End of the create scene function ******/    

@@ -43,25 +43,27 @@ function Arena() {
                 sideOrientation: BABYLON.Mesh.DOUBLESIDE,
                 updatable: true
             }, scene);
+            walls.checkCollisions = true;
             this.walls = walls;
 
             var material = new BABYLON.StandardMaterial("brickMat", scene);
-            material.diffuseTexture = new BABYLON.Texture("img/metal.jpg", scene);
+            material.diffuseTexture = new BABYLON.Texture("/img/metal.jpg", scene);
             material.diffuseTexture.uScale = 3;
             material.diffuseTexture.vScale = 50;
             // material.wireframe = true;
             walls.material = material;
 
-            let s = this.size;
+            let s = this.size - (wallThickness * 2);
             let ground = BABYLON.MeshBuilder.CreateGround("myGround", {
                 width: s,
                 height: s,
                 subdivsions: 500
             }, scene);
+            // ground.position.y = 0.01;
             this.ground = ground;
 
             var sandMaterial = new BABYLON.StandardMaterial("sandMat", scene);
-            sandMaterial.diffuseTexture = new BABYLON.Texture("img/sand.jpg", scene);
+            sandMaterial.diffuseTexture = new BABYLON.Texture("/img/sand.jpg", scene);
             sandMaterial.diffuseTexture.uScale = 20;
             sandMaterial.diffuseTexture.vScale = 20;
 
