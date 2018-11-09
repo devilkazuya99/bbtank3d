@@ -1,3 +1,5 @@
+var ws = new WebSocket('ws://localhost:9999/server');
+ws.onopen = function (event) { console.log('Connected to Server.'); }
 var createScene = function () {
 
     // Create the scene space
@@ -92,47 +94,80 @@ var createScene = function () {
     const moveSpeed = 0.05;
     // Game/Render loop
     scene.onBeforeRenderObservable.add(() => {
+        
+        ws.onmessage = function(event) {
+            // console.log('Data: ' + event.data);
+            // render data from server
+
+            // TODO initialize tank when new user connected
+
+            // Test on tank1
+            let data = JSON.parse(event.data);
+            // console.log(data); 
+
+            if(data.z) {
+                tank1.body.position.z += data.z;
+            }
+            if(data.x) {
+                tank1.body.position.x += data.x;
+            }
+            if(data.t) {    // tank turning
+                tank1.body.rotation.y += data.t;
+            }
+            if(data.r) {    // turret rotation
+                tank1.cap.rotation.y += data.r;
+            }
+        }
+
         if (inputMap["w"] || inputMap["ArrowUp"]) {
             let pt = calculateXY();
+            let data = {name: 'tank1'};
             if (tank1.body.intersectsMesh(tank2.body, true) ||
                 tank1.body.intersectsMesh(tank3.body, true)) {
                 // console.log("Outch~~!!!");
-                tank1.body.position.z += (pt.a * moveSpeed * 7);
-                tank1.body.position.x += (pt.b * moveSpeed * 7);
+                data.z = (pt.a * moveSpeed * 7);
+                data.x = (pt.b * moveSpeed * 7);
             } else {
                 // console.log(pt);
-                tank1.body.position.z -= (pt.a * moveSpeed);
-                tank1.body.position.x -= (pt.b * moveSpeed);
+                data.z = -(pt.a * moveSpeed);
+                data.x = -(pt.b * moveSpeed);
             }
+            ws.send(JSON.stringify(data));
         }
         if (inputMap["a"] || inputMap["ArrowLeft"]) {
             // console.log(tank1.body.rotation);
-            tank1.body.rotation.y -= turnSpeed;
+            let data = { name: 'tank1', t: -turnSpeed };
+            ws.send(JSON.stringify(data));
         }
         if (inputMap["s"] || inputMap["ArrowDown"]) {
             let pt = calculateXY();
+            let data = {name: 'tank1'};
             if (tank1.body.intersectsMesh(tank2.body, true) ||
                 tank1.body.intersectsMesh(tank3.body, true)) {
                 // console.log("Outch~~!!!");
-                tank1.body.position.z -= (pt.a * moveSpeed * 7);
-                tank1.body.position.x -= (pt.b * moveSpeed * 7);
+                data.z = -(pt.a * moveSpeed * 7);
+                data.x = -(pt.b * moveSpeed * 7);
             } else {
                 // console.log(pt);
-                tank1.body.position.z += (pt.a * moveSpeed);
-                tank1.body.position.x += (pt.b * moveSpeed);
+                data.z = (pt.a * moveSpeed);
+                data.x = (pt.b * moveSpeed);
             }
+            ws.send(JSON.stringify(data));
         }
         if (inputMap["d"] || inputMap["ArrowRight"]) {
             // console.log(tank1.body.rotation);
-            tank1.body.rotation.y += turnSpeed;
+            let data = { name: 'tank1', t: turnSpeed };
+            ws.send(JSON.stringify(data));
         }
         if (inputMap["o"]) {
             // console.log(tank1.body.rotation);
-            tank1.cap.rotation.y -= turnSpeed;
+            let data = { name: 'tank1', r: -turnSpeed };
+            ws.send(JSON.stringify(data));
         }
         if (inputMap["p"]) {
             // console.log(tank1.body.rotation);
-            tank1.cap.rotation.y += turnSpeed;
+            let data = { name: 'tank1', r: turnSpeed };
+            ws.send(JSON.stringify(data));
         }
         if (inputMap[" "]) {
             // tank1.bullet.position.z -= 0.04;
