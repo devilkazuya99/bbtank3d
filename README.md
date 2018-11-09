@@ -29,6 +29,12 @@ live-server
 
 End with an example of getting some data out of the system or using it for a little demo
 
+## Server
+
+Checkout the server code in:
+
+[https://github.com/devilkazuya99/bbtank3dserver](https://github.com/devilkazuya99/bbtank3dserver)
+
 ## Running the tests
 
 Explain how to run the automated tests for this system
