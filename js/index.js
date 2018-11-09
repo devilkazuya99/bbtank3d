@@ -95,7 +95,7 @@ var createScene = function () {
         if (inputMap["w"] || inputMap["ArrowUp"]) {
             let pt = calculateXY();
             if (tank1.body.intersectsMesh(tank2.body, true) ||
-                tank1.body.intersectsMesh(tank3.body, true)) {s
+                tank1.body.intersectsMesh(tank3.body, true)) {
                 // console.log("Outch~~!!!");
                 tank1.body.position.z += (pt.a * moveSpeed * 7);
                 tank1.body.position.x += (pt.b * moveSpeed * 7);
