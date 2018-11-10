@@ -1,13 +1,16 @@
 /* TODO
     - Add sprite on top of the tank to display HP
 */
-function Tank() {
+
+function Tank(id) {
     return {
+        id: id,
         hp: 100,
         cap: null,
         body: null,
         bullet: null,
         healthBar: null,
+        player: '',
         create: function (scene) {
             // Add and manipulate meshes in the scene
             var base_box_height = 0.65;
@@ -23,7 +26,12 @@ function Tank() {
                 depth: base_box_depth
             }, scene);
             baseBox.position.y = base_box_height / 2;
-            baseBox.checkCollisions = true;
+            // baseBox.checkCollisions = true;
+            baseBox.ellipsoid = new BABYLON.Vector3(base_box_width / 2, 0.05, base_box_depth / 2);
+            baseBox.onCollide = function (target) {
+                console.log(target);
+                console.log('Outch~~!!');
+            }
             this.body = baseBox;
 
             var topBox = BABYLON.MeshBuilder.CreateBox("topBox", {
@@ -32,10 +40,11 @@ function Tank() {
                 depth: top_box_depth
             }, scene);
             topBox.parent = baseBox;
-            topBox.position.y = base_box_height;
+            topBox.position.y = base_box_height + 0.1;
             topBox.position.z = 0.20;
             topBox.checkCollisions = true;
-            topBox.isPickable = true;
+            topBox.ellipsoid = new BABYLON.Vector3(0.00, 0.05, 0.00);
+            // topBox.isPickable = true;
             this.cap = topBox;
 
             var cannon = BABYLON.MeshBuilder.CreateTube("cannon", {
@@ -50,7 +59,7 @@ function Tank() {
             cannon.parent = topBox;
 
             // Healthbar
-            this.healthBar = new BABYLON.MeshBuilder.CreatePlane("healthbar", {height: 0.2, width: 2.0, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
+            this.healthBar = new BABYLON.MeshBuilder.CreatePlane("healthbar", { height: 0.2, width: 2.0, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
             this.healthBar.parent = baseBox;
             this.healthBar.position.y = 1.2;
             this.healthBar.position.z = 0.73;
@@ -74,10 +83,12 @@ function Tank() {
             cannon.material = myMaterial;
 
             // Bullet should not sit in tank.
-            var bullet = BABYLON.MeshBuilder.CreateSphere("bullet", {diameter: 0.28}, scene);
+            var bullet = BABYLON.MeshBuilder.CreateSphere("bullet", { diameter: 0.28 }, scene);
             bullet.parent = topBox;
             bullet.position.z = -2.5;
-            bullet.onCollide = function(target, b) {
+            bullet.onCollide = function (target, b) {
+                console.log(target);
+                console.log(b);
                 console.log(target.name);
                 bullet.position.x = 0;
                 bullet.position.y = 0;
@@ -101,7 +112,6 @@ function Tank() {
                 wheel.parent = baseBox;
                 wheel.position.z = wheelZ[i];
             }
-
             return this;
         }
     };
