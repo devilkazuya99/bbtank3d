@@ -7,6 +7,7 @@ function Tank() {
         cap: null,
         body: null,
         bullet: null,
+        healthBar: null,
         create: function (scene) {
             // Add and manipulate meshes in the scene
             var base_box_height = 0.65;
@@ -48,6 +49,17 @@ function Tank() {
             }, scene);
             cannon.parent = topBox;
 
+            // Healthbar
+            this.healthBar = new BABYLON.MeshBuilder.CreatePlane("healthbar", {height: 0.2, width: 2.0, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene);
+            this.healthBar.parent = baseBox;
+            this.healthBar.position.y = 1.2;
+            this.healthBar.position.z = 0.73;
+            // this.healthBar.rotation.y = Math.PI / 4;
+            var healthBarMaterial = new BABYLON.StandardMaterial("healthBarMaterial", scene);
+            healthBarMaterial.emissiveColor = new BABYLON.Color3(0, 1, 0);
+            this.healthBar.material = healthBarMaterial;
+            // on hit modify health and update healthbar
+
             var metalMat = new BABYLON.StandardMaterial("metalMat", scene);
             metalMat.diffuseTexture = new BABYLON.Texture("/img/galva.jpg", scene);
             topBox.material = metalMat;
@@ -61,6 +73,7 @@ function Tank() {
 
             cannon.material = myMaterial;
 
+            // Bullet should not sit in tank.
             var bullet = BABYLON.MeshBuilder.CreateSphere("bullet", {diameter: 0.28}, scene);
             bullet.parent = topBox;
             bullet.position.z = -2.5;
