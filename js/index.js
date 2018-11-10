@@ -61,7 +61,12 @@ var createScene = function () {
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox/skybox", scene);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
 
-
+    // make healthbar glow
+    var gl = new BABYLON.GlowLayer("glow", scene);
+    var hBars = scene.getMeshByName("healthbar").getChildren();
+    for (var i in hBars.length) {
+        gl.addIncludedOnlyMesh(hBars[i]);
+    }
 
     // Keyboard events
     var inputMap = {};
@@ -87,15 +92,15 @@ var createScene = function () {
         };
     }
 
-    var forwards = new BABYLON.Vector3(0,0,-0.5);
+    var forwards = new BABYLON.Vector3(0, 0, -0.5);
     forwards.negate();
 
     const turnSpeed = 0.005;
     const moveSpeed = 0.05;
     // Game/Render loop
     scene.onBeforeRenderObservable.add(() => {
-        
-        ws.onmessage = function(event) {
+
+        ws.onmessage = function (event) {
             // console.log('Data: ' + event.data);
             // render data from server
 
@@ -105,23 +110,23 @@ var createScene = function () {
             let data = JSON.parse(event.data);
             // console.log(data); 
 
-            if(data.z) {
+            if (data.z) {
                 tank1.body.position.z += data.z;
             }
-            if(data.x) {
+            if (data.x) {
                 tank1.body.position.x += data.x;
             }
-            if(data.t) {    // tank turning
+            if (data.t) {    // tank turning
                 tank1.body.rotation.y += data.t;
             }
-            if(data.r) {    // turret rotation
+            if (data.r) {    // turret rotation
                 tank1.cap.rotation.y += data.r;
             }
         }
 
         if (inputMap["w"] || inputMap["ArrowUp"]) {
             let pt = calculateXY();
-            let data = {name: 'tank1'};
+            let data = { name: 'tank1' };
             if (tank1.body.intersectsMesh(tank2.body, true) ||
                 tank1.body.intersectsMesh(tank3.body, true)) {
                 // console.log("Outch~~!!!");
@@ -141,7 +146,7 @@ var createScene = function () {
         }
         if (inputMap["s"] || inputMap["ArrowDown"]) {
             let pt = calculateXY();
-            let data = {name: 'tank1'};
+            let data = { name: 'tank1' };
             if (tank1.body.intersectsMesh(tank2.body, true) ||
                 tank1.body.intersectsMesh(tank3.body, true)) {
                 // console.log("Outch~~!!!");

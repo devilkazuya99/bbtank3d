@@ -12,7 +12,7 @@ Just run the index.html file.
 
 What things you need to install the software and how to install them
 
-```
+```shell
 npm install live-server -g
 ```
 
@@ -59,9 +59,9 @@ Give an example
 - [x] tank navigation with keyboard
 - [x] tank cannon turning with keyboard
 - [x] attach camera to tank
-- [ ] bullet and collision
-- [ ] Tank HP sprite
-- [ ] Multiplayer mode
+- [*] Multiplayer mode (WebSocket server) [WIP]
+- [-] Tank HP sprite (not using sprite because of positioning issue)
+- [-] bullet and collision (need to manage at screen level)
 
 ## Deployment
 

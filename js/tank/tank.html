@@ -68,6 +68,12 @@
             tank3.body.position.x = -10;
             tank3.body.position.z = 10;
 
+            var gl = new BABYLON.GlowLayer("glow", scene);
+            var hBars = scene.getMeshByName("healthbar").getChildren();
+            for(var i in hBars.length) {
+                gl.addIncludedOnlyMesh(hBars[i]);
+            }
+
             var target = BABYLON.MeshBuilder.CreateBox("targer", {
                 height: 5,
                 width: 4,
