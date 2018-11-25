@@ -40,7 +40,7 @@ function Tank(id) {
                 depth: top_box_depth
             }, scene);
             topBox.parent = baseBox;
-            topBox.position.y = base_box_height + 0.1;
+            topBox.position.y = base_box_height + 0.01;
             topBox.position.z = 0.20;
             topBox.checkCollisions = true;
             topBox.ellipsoid = new BABYLON.Vector3(0.00, 0.05, 0.00);

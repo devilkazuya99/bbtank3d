@@ -1,5 +1,6 @@
 var ws = new WebSocket('ws://localhost:9999/server');
 ws.onopen = function (event) { console.log('Connected to Server.'); }
+ws.onclose = function (event) { console.log('Closing connection.'); }
 var playerTank = null;
 var createScene = function () {
 
@@ -99,7 +100,7 @@ var createScene = function () {
     button1.onPointerUpObservable.add(function () {
         alert("you did it! " + inputBox.text);
         // register a new tank to the server.
-        var data = {
+        var data = { 
             id: 'tank_' + new Date().getTime(),
             newTank: true,
             player: inputBox.text,
@@ -167,16 +168,29 @@ var createScene = function () {
             let data = JSON.parse(event.data);
             // console.log(data); 
             if (data.z && data.x) {
-                var forwards = new BABYLON.Vector3(data.x, 0, data.z);
+                // if tank not exists create new tank on screen. 
+                if (!tanks[data.tank]) {
+                    var newTank = new Tank(data.tank);
+                    newTank.create(scene);
+                    newTank.player = data.tank;
+                    newTank.body.position.x = data.x;
+                    newTank.body.position.z = data.z;
+                    newTank.body.checkCollisions = true;
+                    tanks[data.tank] = newTank;
+                } else {
+                    tanks[data.tank].body.position.x = data.x;
+                    tanks[data.tank].body.position.z = data.z;
+                }
+                var forwards = new BABYLON.Vector3(data.move.x, 0, data.move.z);
                 forwards.negate();
                 tanks[data.tank].body.moveWithCollisions(forwards);
             }
 
             if (data.t) {    // tank turning
-                tanks[data.tank].body.rotation.y += data.t;
+                tanks[data.tank].body.rotation.y = data.t;
             }
             if (data.r) {    // turret rotation
-                tanks[data.tank].cap.rotation.y += data.r;
+                tanks[data.tank].cap.rotation.y = data.r;
             }
             // create new tank
             if (data.newTank) {
@@ -192,7 +206,7 @@ var createScene = function () {
                 newTank.body.checkCollisions = true;
                 // newTank.rotation = BABYLON.Vector3.RotationFromAxis(0, 0, 0);
                 tanks[newTank.id] = newTank;
-                if(!playerTank && !button1.isVisible && !inputBox.isVisible) {
+                if (!playerTank && !button1.isVisible && !inputBox.isVisible) {
                     console.log("playerTank = " + playerTank + ". Setting playerTank = " + newTank.id);
                     playerTank = newTank;
                     // attach camera
@@ -204,41 +218,48 @@ var createScene = function () {
 
         // Capture keyboard input
         if (playerTank) {
-            let data = { tank: playerTank.id };
+            let data = { 
+                tank: playerTank.id,
+                t: playerTank.body.rotation.y,
+                r: playerTank.cap.rotation.y
+             };
             if (inputMap["w"] || inputMap["ArrowUp"]) {
                 let pt = calculateXY();
-                // let data = { tank: playerTank.id, name: 'tank1' };
-                // console.log(pt);
-                data.z = -(pt.a * moveSpeed);
-                data.x = -(pt.b * moveSpeed);
+                data.z = playerTank.body.position.z;
+                data.x = playerTank.body.position.x;
+                data.move = {
+                    z: -(pt.a * moveSpeed),
+                    x: -(pt.b * moveSpeed)
+                };
                 ws.send(JSON.stringify(data));
             }
             if (inputMap["a"] || inputMap["ArrowLeft"]) {
                 // console.log(tank1.body.rotation);
-                data.t = -turnSpeed;
+                data.t = playerTank.body.rotation.y - turnSpeed;
                 ws.send(JSON.stringify(data));
             }
             if (inputMap["s"] || inputMap["ArrowDown"]) {
                 let pt = calculateXY();
-                // let data = { name: 'tank1' };
-                // console.log(pt);
-                data.z = (pt.a * moveSpeed);
-                data.x = (pt.b * moveSpeed);
+                data.z = playerTank.body.position.z;
+                data.x = playerTank.body.position.x;
+                data.move = {
+                    z: (pt.a * moveSpeed),
+                    x: (pt.b * moveSpeed)
+                }
                 ws.send(JSON.stringify(data));
             }
             if (inputMap["d"] || inputMap["ArrowRight"]) {
                 // console.log(tank1.body.rotation);
-                data.t = turnSpeed;
+                data.t = playerTank.body.rotation.y + turnSpeed;
                 ws.send(JSON.stringify(data));
             }
             if (inputMap["o"]) {
                 // console.log(tank1.body.rotation);
-                data.r = -turnSpeed;
+                data.r = playerTank.cap.rotation.y - turnSpeed;
                 ws.send(JSON.stringify(data));
             }
             if (inputMap["p"]) {
-                // console.log(tank1.body.rotation);
-                data.r = turnSpeed;
+                data.r = playerTank.cap.rotation.y + turnSpeed;
                 ws.send(JSON.stringify(data));
             }
             if (inputMap[" "]) {
